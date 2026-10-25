@@ -1,0 +1,17 @@
+<div class="min-h-screen">
+  <app-header />
+
+  <div class="flex min-h-[calc(100vh-4rem)]">
+    <app-sidebar />
+
+    <main class="min-w-0 flex-1 bg-white dark:bg-slate-950">
+      <div>
+        <button hlmSidebarTrigger class="ml-3 font-semibold text-cyan-700 dark:text-cyan-400">
+          <span class="sr-only">Recolher menu</span>
+        </button>
+      </div>
+
+      <router-outlet />
+    </main>
+  </div>
+</div>

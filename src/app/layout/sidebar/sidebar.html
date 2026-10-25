@@ -1,0 +1,63 @@
+<div hlmSidebarWrapper>
+  <hlm-sidebar>
+    <!-- Cabeçalho e botão de recolher -->
+    <div hlmSidebarHeader>
+      <div class="flex items-center justify-between">
+        <span class="font-semibold text-cyan-700 dark:text-cyan-400">Gestão Escolar</span>
+        <button hlmSidebarTrigger class="text-cyan-700 dark:text-cyan-400"></button>
+      </div>
+    </div>
+
+    <!-- Área rolável dos menus -->
+    <div hlmSidebarContent>
+      <!-- Menu principal -->
+      <div hlmSidebarGroup>
+        <div hlmSidebarGroupLabel class="text-muted-foreground">Menu principal</div>
+
+        <div hlmSidebarGroupContent>
+          <ul hlmSidebarMenu>
+            @for (item of _mainItems; track item.title) {
+              <li hlmSidebarMenuItem>
+                <button hlmSidebarMenuButton type="button" class="w-full">
+                  <ng-icon [name]="item.icon" />
+                  <span>{{ item.title }}</span>
+                </button>
+              </li>
+            }
+          </ul>
+        </div>
+      </div>
+
+      <!-- Sistema -->
+      <div hlmSidebarGroup>
+        <div hlmSidebarGroupLabel class="text-muted-foreground">Sistema</div>
+
+        <div hlmSidebarGroupContent>
+          <ul hlmSidebarMenu>
+            @for (item of _systemItems; track item.title) {
+              <li hlmSidebarMenuItem>
+                <button hlmSidebarMenuButton type="button" class="w-full">
+                  <ng-icon [name]="item.icon" />
+                  <span>{{ item.title }}</span>
+                </button>
+              </li>
+            }
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Rodapé -->
+    <div hlmSidebarFooter>
+      <div class="flex flex-col items-center gap-3 p-3 text-muted-foreground">
+        <ng-icon [name]="_footer.icon" size="50" class="shrink-0" />
+
+        <p class="text-xs font-medium">
+          {{ _footer.phrase }}
+        </p>
+      </div>
+    </div>
+  </hlm-sidebar>
+
+  <ng-content />
+</div>
