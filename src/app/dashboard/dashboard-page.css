@@ -1,0 +1,41 @@
+:host {
+  display: block;
+}
+
+.metric-bars {
+  display: flex;
+  width: 5.5rem;
+  height: 2rem;
+  align-items: end;
+  gap: 3px;
+}
+
+.metric-bars span {
+  flex: 1;
+  min-width: 3px;
+  border-radius: 3px 3px 0 0;
+  opacity: 0.85;
+}
+
+.dashboard-widgets {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+@media (min-width: 640px) {
+  .teacher-item:nth-child(3),
+  .teacher-item:nth-child(4) {
+    border-bottom: 0;
+  }
+}
+
+@media (min-width: 1280px) {
+  .dashboard-widgets {
+    grid-template-columns: minmax(0, 2fr) minmax(15rem, 1fr) minmax(15rem, 1fr);
+    grid-template-rows: repeat(2, minmax(15rem, 1fr));
+  }
+
+  .teacher-widget {
+    grid-column: span 2;
+    grid-row: span 2;
+  }
+}

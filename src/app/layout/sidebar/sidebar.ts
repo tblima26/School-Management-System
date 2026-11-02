@@ -36,7 +36,7 @@ export class Sidebar {
   protected readonly _mainItems = [
     {
       title: 'Dashboard',
-      url: '/dashboard',
+      url: '/',
       icon: 'lucideLayoutDashboard',
     },
     {

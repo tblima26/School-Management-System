@@ -1,0 +1,141 @@
+<main class="mx-auto w-full max-w-[1440px] px-5 py-8 sm:px-8 lg:px-10">
+  <header class="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+    <div>
+      <p class="mb-2 text-xs font-semibold tracking-[0.14em] text-cyan-800 uppercase dark:text-cyan-300">
+        Visão geral da escola
+      </p>
+      <h1 class="text-3xl font-semibold tracking-tight text-slate-950 dark:text-white">Dashboard</h1>
+      <p class="mt-2 text-sm text-slate-600 dark:text-slate-400">Bem-vindo de volta, João. Veja o que está acontecendo hoje.</p>
+    </div>
+    <p class="text-xs font-medium text-slate-500 dark:text-slate-400">Dados acadêmicos de demonstração</p>
+  </header>
+
+  <section aria-label="Indicadores acadêmicos" class="mb-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+    @for (metric of metrics; track metric.key) {
+      <article class="metric-card rounded-lg border border-slate-200 bg-white p-5 dark:border-slate-800 dark:bg-slate-950">
+        <div class="flex items-start justify-between gap-3">
+          <div>
+            <p class="text-xs font-medium text-slate-500 dark:text-slate-400">{{ metric.label }}</p>
+            <p class="mt-2 text-3xl font-semibold tracking-tight text-slate-950 dark:text-white">
+              {{ metric.key === 'students' ? studentCount() : metric.key === 'teachers' ? professorCount() : metric.value }}
+            </p>
+          </div>
+          <span class="grid size-10 shrink-0 place-items-center rounded-md" [class]="metric.iconClass">
+            <ng-icon [name]="metric.icon" class="size-5" />
+          </span>
+        </div>
+        <div class="mt-4 flex items-end justify-between gap-3">
+          <p class="text-[11px] leading-4 text-slate-500 dark:text-slate-400">{{ metric.note }}</p>
+          <div class="metric-bars" aria-label="Gráfico demonstrativo de evolução">
+            @for (bar of metric.bars; track $index) {
+              <span [class]="metric.barClass" [style.height.%]="bar"></span>
+            }
+          </div>
+        </div>
+      </article>
+    }
+  </section>
+
+  <section aria-label="Atividade e atalhos" class="dashboard-widgets grid gap-4">
+    <article class="teacher-widget rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-950">
+      <div class="flex items-start justify-between gap-4 border-b border-slate-100 px-5 py-4 dark:border-slate-800">
+        <div>
+          <h2 class="text-sm font-semibold text-slate-950 dark:text-white">Professores conectados recentemente</h2>
+          <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">Acompanhamento de acesso e desempenho por turma</p>
+        </div>
+        <span class="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-[10px] font-medium text-emerald-800 dark:bg-emerald-950 dark:text-emerald-200">
+          <span class="size-1.5 rounded-full bg-emerald-500"></span>
+          8 recentes
+        </span>
+      </div>
+
+      <div class="teacher-grid grid sm:grid-cols-2">
+        @for (teacher of recentTeachers; track teacher.email) {
+          <article class="teacher-item flex min-w-0 flex-col justify-between gap-4 border-b border-slate-100 p-5 last:border-0 sm:even:border-l dark:border-slate-800">
+            <div class="flex min-w-0 items-center gap-3">
+              <hlm-avatar class="size-10 shrink-0">
+                <span hlmAvatarFallback [class]="teacher.avatarClass">{{ teacher.initials }}</span>
+              </hlm-avatar>
+              <div class="min-w-0">
+                <h3 class="truncate text-sm font-medium text-slate-900 dark:text-slate-100">{{ teacher.name }}</h3>
+                <p class="mt-0.5 flex min-w-0 items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400">
+                  <ng-icon name="lucideMail" class="size-3 shrink-0" />
+                  <span class="truncate">{{ teacher.email }}</span>
+                </p>
+              </div>
+            </div>
+            <div class="grid grid-cols-2 gap-x-3 gap-y-2 text-xs">
+              <div>
+                <p class="text-[10px] text-slate-500 dark:text-slate-400">Turma</p>
+                <p class="mt-0.5 font-medium text-slate-800 dark:text-slate-200">{{ teacher.classroom }}</p>
+              </div>
+              <div>
+                <p class="text-[10px] text-slate-500 dark:text-slate-400">Matéria</p>
+                <p class="mt-0.5 truncate font-medium text-slate-800 dark:text-slate-200">{{ teacher.subject }}</p>
+              </div>
+              <div class="col-span-2 flex items-center justify-between gap-3">
+                <p class="text-[10px] text-slate-500 dark:text-slate-400">Status</p>
+                <p class="mt-0.5 flex items-center gap-1.5 font-medium" [class.text-emerald-700]="teacher.status === 'Online'" [class.text-amber-700]="teacher.status === 'Em aula'" [class.dark:text-emerald-300]="teacher.status === 'Online'" [class.dark:text-amber-300]="teacher.status === 'Em aula'">
+                  <span class="size-1.5 rounded-full" [class.bg-emerald-500]="teacher.status === 'Online'" [class.bg-amber-500]="teacher.status === 'Em aula'"></span>
+                  {{ teacher.status }}
+                </p>
+              </div>
+              <p class="col-span-2 text-[10px] text-slate-500 dark:text-slate-400">Último acesso: {{ teacher.lastLogin }}</p>
+            </div>
+          </article>
+        }
+      </div>
+    </article>
+
+    <article class="rounded-lg border border-slate-200 bg-white p-5 dark:border-slate-800 dark:bg-slate-950">
+      <div class="mb-4">
+        <h2 class="text-sm font-semibold text-slate-950 dark:text-white">Atalhos rápidos</h2>
+        <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">Acesse ações frequentes</p>
+      </div>
+      <div class="grid grid-cols-2 gap-2">
+        <a hlmBtn variant="outline" [routerLink]="['/alunos']" [queryParams]="{ acao: 'novo' }" class="quick-action h-auto min-h-20 flex-col items-start justify-between rounded-md p-3 text-left">
+          <ng-icon name="lucidePlus" class="size-4 text-cyan-800 dark:text-cyan-300" />
+          <span class="text-xs xl:text-[10px]">Novo aluno</span>
+        </a>
+        <a hlmBtn variant="outline" [routerLink]="['/professores']" [queryParams]="{ acao: 'novo' }" class="quick-action h-auto min-h-20 flex-col items-start justify-between rounded-md p-3 text-left">
+          <ng-icon name="lucideUsers" class="size-4 text-emerald-700 dark:text-emerald-300" />
+          <span class="text-xs xl:text-[10px]">Novo professor</span>
+        </a>
+        <button hlmBtn variant="outline" type="button" disabled class="quick-action h-auto min-h-20 flex-col items-start justify-between rounded-md p-3 text-left">
+          <ng-icon name="lucideBookOpen" class="size-4 text-amber-700 dark:text-amber-300" />
+          <span class="flex w-full flex-wrap items-center justify-between gap-x-1 gap-y-0.5 text-xs xl:text-[10px]">Novo curso <span class="text-[9px] text-slate-400 xl:text-[8px]">Em breve</span></span>
+        </button>
+        <button hlmBtn variant="outline" type="button" disabled class="quick-action h-auto min-h-20 flex-col items-start justify-between rounded-md p-3 text-left">
+          <ng-icon name="lucideCalendarDays" class="size-4 text-rose-700 dark:text-rose-300" />
+          <span class="flex w-full flex-wrap items-center justify-between gap-x-1 gap-y-0.5 text-xs xl:text-[10px]">Lançar notas <span class="text-[9px] text-slate-400 xl:text-[8px]">Em breve</span></span>
+        </button>
+      </div>
+    </article>
+
+    <article class="rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-950">
+      <div class="border-b border-slate-100 px-5 py-4 dark:border-slate-800">
+        <h2 class="text-sm font-semibold text-slate-950 dark:text-white">Atividades recentes</h2>
+        <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">Movimentações de alunos</p>
+      </div>
+      <div class="divide-y divide-slate-100 px-5 dark:divide-slate-800">
+        @for (activity of recentActivities(); track activity.studentName) {
+          <div class="flex items-start gap-3 py-3.5">
+            <span class="grid size-8 shrink-0 place-items-center rounded-full text-[10px] font-semibold" [class]="activity.avatarClass">
+              {{ activity.initials }}
+            </span>
+            <div class="min-w-0 flex-1">
+              <p class="text-xs leading-5 text-slate-700 dark:text-slate-300">
+                <span class="font-semibold text-slate-900 dark:text-slate-100">{{ activity.studentName }}</span>
+                {{ activity.description }}
+              </p>
+              <p class="mt-1 flex items-center gap-1 text-[10px] text-slate-400">
+                <ng-icon name="lucideClock3" class="size-3" />
+                {{ activity.time }}
+              </p>
+            </div>
+          </div>
+        }
+      </div>
+    </article>
+  </section>
+</main>

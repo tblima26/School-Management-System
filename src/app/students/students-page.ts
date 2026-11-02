@@ -1,5 +1,6 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import {
   lucideBuilding2,
@@ -49,6 +50,8 @@ interface StudentForm {
 })
 export class StudentsPage {
   private readonly studentApi = inject(StudentApiService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
 
   protected readonly students = signal<Student[]>([]);
   protected readonly loading = signal(true);
@@ -97,6 +100,10 @@ export class StudentsPage {
 
   constructor() {
     this.loadStudents();
+    if (this.route.snapshot.queryParamMap.get('acao') === 'novo') {
+      this.openCreate();
+      this.router.navigate([], { relativeTo: this.route, queryParams: {}, replaceUrl: true });
+    }
   }
 
   protected loadStudents(): void {

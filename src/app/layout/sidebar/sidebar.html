@@ -18,7 +18,7 @@
           <ul hlmSidebarMenu>
             @for (item of _mainItems; track item.title) {
               <li hlmSidebarMenuItem>
-                @if (item.url === '/alunos') {
+                @if (item.url === '/' || item.url === '/alunos' || item.url === '/professores') {
                   <a
                     hlmSidebarMenuButton
                     [routerLink]="item.url"

@@ -1,8 +1,12 @@
 import { Routes } from '@angular/router';
+import { DashboardPage } from './dashboard/dashboard-page';
+import { ProfessorsPage } from './professors/professors-page';
 import { StudentsPage } from './students/students-page';
 
 export const routes: Routes = [
-	{ path: '', pathMatch: 'full', redirectTo: 'alunos' },
+	{ path: '', component: DashboardPage },
+	{ path: 'dashboard', pathMatch: 'full', redirectTo: '' },
 	{ path: 'alunos', component: StudentsPage },
-	{ path: '**', redirectTo: 'alunos' },
+	{ path: 'professores', component: ProfessorsPage },
+	{ path: '**', redirectTo: '' },
 ];
