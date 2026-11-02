@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import {
   lucideLayoutDashboard,
@@ -15,7 +16,7 @@ import { HlmSidebarImports } from '@spartan-ng/helm/sidebar';
 
 
 @Component({
-  imports: [NgIcon, HlmSidebarImports],
+  imports: [NgIcon, HlmSidebarImports, RouterLink, RouterLinkActive],
   selector: 'app-sidebar',
   providers:[
     provideIcons({
