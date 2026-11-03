@@ -80,7 +80,7 @@ npm start
 A aplicação será iniciada em modo de desenvolvimento e normalmente estará disponível em:
 
 ```bash
-http://localhost:4200
+http://localhost:5000
 ```
 
 ### Build de produção
