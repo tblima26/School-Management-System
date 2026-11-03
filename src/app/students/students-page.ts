@@ -3,46 +3,31 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import {
-  lucideBuilding2,
-  lucideMail,
-  lucidePencil,
-  lucidePhone,
   lucidePlus,
   lucideRefreshCw,
   lucideSearch,
-  lucideTrash2,
   lucideUsers,
-  lucideX,
 } from '@ng-icons/lucide';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmInputImports } from '@spartan-ng/helm/input';
+import { DataNotice } from '../shared/data-notice/data-notice';
+import { EntityFilters } from '../shared/entity-filters/entity-filters';
+import { StatCard } from '../shared/stat-card/stat-card';
+import { TitleContent } from '../shared/title-content/title-content';
+import { StudentDeleteConfirmation } from './components/student-delete-confirmation/student-delete-confirmation';
+import { StudentEditor } from './components/student-editor/student-editor';
+import { StudentRow } from './components/student-row/student-row';
 import { StudentApiService, type EnrollmentStatus, type Student, type StudentPayload } from './student-api.service';
-
-interface StudentForm {
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: string;
-  age: number | null;
-  university: string;
-  status: EnrollmentStatus;
-}
 
 @Component({
   selector: 'app-students-page',
-  imports: [FormsModule, NgIcon, HlmButtonImports, HlmInputImports],
+  imports: [FormsModule, NgIcon, HlmButtonImports, HlmInputImports, DataNotice, EntityFilters, StatCard, TitleContent, StudentDeleteConfirmation, StudentEditor, StudentRow],
   providers: [
     provideIcons({
-      lucideBuilding2,
-      lucideMail,
-      lucidePencil,
-      lucidePhone,
       lucidePlus,
       lucideRefreshCw,
       lucideSearch,
-      lucideTrash2,
       lucideUsers,
-      lucideX,
     }),
   ],
   templateUrl: './students-page.html',
@@ -65,8 +50,6 @@ export class StudentsPage {
   protected readonly editorOpen = signal(false);
   protected readonly studentToDelete = signal<Student | null>(null);
   protected readonly editingStudent = signal<Student | null>(null);
-  protected form = this.emptyForm();
-
   protected readonly filteredStudents = computed(() => {
     const term = this.searchTerm().trim().toLocaleLowerCase('pt-BR');
     const status = this.statusFilter();
@@ -140,22 +123,12 @@ export class StudentsPage {
 
   protected openCreate(): void {
     this.editingStudent.set(null);
-    this.form = this.emptyForm();
     this.errorMessage.set('');
     this.editorOpen.set(true);
   }
 
   protected openEdit(student: Student): void {
     this.editingStudent.set(student);
-    this.form = {
-      firstName: student.firstName,
-      lastName: student.lastName,
-      email: student.email,
-      phone: student.phone,
-      age: student.age,
-      university: student.university,
-      status: student.status,
-    };
     this.errorMessage.set('');
     this.editorOpen.set(true);
   }
@@ -164,10 +137,7 @@ export class StudentsPage {
     if (!this.saving()) this.editorOpen.set(false);
   }
 
-  protected saveStudent(): void {
-    if (this.form.age === null) return;
-
-    const payload: StudentPayload = { ...this.form, age: Number(this.form.age) };
+  protected saveStudent(payload: StudentPayload): void {
     const currentStudent = this.editingStudent();
     this.saving.set(true);
     this.errorMessage.set('');
@@ -223,19 +193,4 @@ export class StudentsPage {
     return `${student.firstName} ${student.lastName}`;
   }
 
-  protected initials(student: Student): string {
-    return `${student.firstName.charAt(0)}${student.lastName.charAt(0)}`.toLocaleUpperCase('pt-BR');
-  }
-
-  private emptyForm(): StudentForm {
-    return {
-      firstName: '',
-      lastName: '',
-      email: '',
-      phone: '',
-      age: null,
-      university: '',
-      status: 'Ativo',
-    };
-  }
 }

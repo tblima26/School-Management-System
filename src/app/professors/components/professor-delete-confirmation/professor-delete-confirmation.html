@@ -1,0 +1,12 @@
+<div class="fixed inset-0 z-60 grid place-items-center bg-slate-950/50 p-4" (click)="canceled.emit()">
+  <section role="alertdialog" aria-modal="true" aria-labelledby="delete-professor-title" class="surface w-full max-w-md rounded-lg p-6 shadow-2xl dark:border-slate-700" (click)="$event.stopPropagation()">
+    <h2 id="delete-professor-title" class="text-lg font-semibold text-slate-950 dark:text-white">Excluir professor?</h2>
+    <p class="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-400">O cadastro de <strong class="font-medium text-slate-900 dark:text-slate-100">{{ fullName() }}</strong> será removido desta tela.</p>
+    <div class="mt-6 flex justify-end gap-2">
+      <button hlmBtn variant="outline" type="button" class="h-9 rounded-md" [disabled]="deleting()" (click)="canceled.emit()">Cancelar</button>
+      <button hlmBtn type="button" class="h-9 rounded-md bg-rose-700 text-white hover:bg-rose-800" [disabled]="deleting()" (click)="confirmed.emit()">
+        {{ deleting() ? 'Excluindo...' : 'Excluir professor' }}
+      </button>
+    </div>
+  </section>
+</div>

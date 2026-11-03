@@ -2,21 +2,16 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import {
-  lucideBookOpen,
-  lucideMail,
-  lucidePencil,
-  lucidePhone,
-  lucidePlus,
-  lucideRefreshCw,
-  lucideSearch,
-  lucideTrash2,
-  lucideUsers,
-  lucideX,
-} from '@ng-icons/lucide';
-import { HlmAvatarImports } from '@spartan-ng/helm/avatar';
+import { lucidePlus, lucideRefreshCw, lucideSearch, lucideUsers } from '@ng-icons/lucide';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmInputImports } from '@spartan-ng/helm/input';
+import { DataNotice } from '../shared/data-notice/data-notice';
+import { EntityFilters } from '../shared/entity-filters/entity-filters';
+import { StatCard } from '../shared/stat-card/stat-card';
+import { TitleContent } from '../shared/title-content/title-content';
+import { ProfessorDeleteConfirmation } from './components/professor-delete-confirmation/professor-delete-confirmation';
+import { ProfessorEditor } from './components/professor-editor/professor-editor';
+import { ProfessorRow } from './components/professor-row/professor-row';
 import {
   ProfessorApiService,
   type Professor,
@@ -24,60 +19,54 @@ import {
   type ProfessorStatus,
 } from './professor-api.service';
 
-interface ProfessorForm {
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: string;
-  classroom: string;
-  subject: string;
-  status: ProfessorStatus;
-}
-
 @Component({
   selector: 'app-professors-page',
-  imports: [FormsModule, NgIcon, HlmAvatarImports, HlmButtonImports, HlmInputImports],
+  imports: [
+    FormsModule,
+    NgIcon,
+    HlmButtonImports,
+    HlmInputImports,
+    DataNotice,
+    EntityFilters,
+    StatCard,
+    TitleContent,
+    ProfessorDeleteConfirmation,
+    ProfessorEditor,
+    ProfessorRow,
+  ],
   providers: [
     provideIcons({
-      lucideBookOpen,
-      lucideMail,
-      lucidePencil,
-      lucidePhone,
       lucidePlus,
       lucideRefreshCw,
       lucideSearch,
-      lucideTrash2,
       lucideUsers,
-      lucideX,
     }),
   ],
   templateUrl: './professors-page.html',
   styleUrl: './professors-page.css',
 })
 export class ProfessorsPage {
-  private readonly professorApi = inject(ProfessorApiService);
-  private readonly route = inject(ActivatedRoute);
-  private readonly router = inject(Router);
+  professorApi = inject(ProfessorApiService);
+  route = inject(ActivatedRoute);
+  router = inject(Router);
 
-  protected readonly professors = signal<Professor[]>([]);
-  protected readonly loading = signal(true);
-  protected readonly saving = signal(false);
-  protected readonly deleting = signal(false);
-  protected readonly searchTerm = signal('');
-  protected readonly statusFilter = signal<'Todos' | ProfessorStatus>('Todos');
-  protected readonly page = signal(1);
-  protected readonly pageSize = 10;
-  protected readonly errorMessage = signal('');
-  protected readonly editorOpen = signal(false);
-  protected readonly professorToDelete = signal<Professor | null>(null);
-  protected readonly editingProfessor = signal<Professor | null>(null);
-  protected form = this.emptyForm();
+  professors = signal<Professor[]>([]);
+  loading = signal(true);
+  saving = signal(false);
+  deleting = signal(false);
+  searchTerm = signal('');
+  statusFilter = signal<'Todos' | ProfessorStatus>('Todos');
+  page = signal(1);
+  pageSize = 10;
+  errorMessage = signal('');
+  editorOpen = signal(false);
+  professorToDelete = signal<Professor | null>(null);
+  editingProfessor = signal<Professor | null>(null);
+  filteredProfessors = computed(() => {
+  const term = this.searchTerm().trim().toLocaleLowerCase('pt-BR');
+  const status = this.statusFilter();
 
-  protected readonly filteredProfessors = computed(() => {
-    const term = this.searchTerm().trim().toLocaleLowerCase('pt-BR');
-    const status = this.statusFilter();
-
-    return this.professors().filter((professor) => {
+  return this.professors().filter((professor) => {
       const matchesTerm = [
         professor.firstName,
         professor.lastName,
@@ -95,7 +84,9 @@ export class ProfessorsPage {
   protected readonly activeCount = computed(
     () => this.professors().filter((professor) => professor.status === 'Ativo').length,
   );
-  protected readonly totalPages = computed(() => Math.max(1, Math.ceil(this.filteredProfessors().length / this.pageSize)));
+  protected readonly totalPages = computed(() =>
+    Math.max(1, Math.ceil(this.filteredProfessors().length / this.pageSize)),
+  );
   protected readonly pageNumbers = computed(() =>
     Array.from({ length: this.totalPages() }, (_, index) => index + 1),
   );
@@ -124,13 +115,17 @@ export class ProfessorsPage {
     this.errorMessage.set('');
     this.professorApi.getProfessors().subscribe({
       next: (professors) => {
-        this.professors.set(professors.sort((first, second) =>
-          this.fullName(first).localeCompare(this.fullName(second), 'pt-BR'),
-        ));
+        this.professors.set(
+          professors.sort((first, second) =>
+            this.fullName(first).localeCompare(this.fullName(second), 'pt-BR'),
+          ),
+        );
         this.loading.set(false);
       },
       error: () => {
-        this.errorMessage.set('Não foi possível carregar os professores. Verifique sua conexão e tente novamente.');
+        this.errorMessage.set(
+          'Não foi possível carregar os professores. Verifique sua conexão e tente novamente.',
+        );
         this.loading.set(false);
       },
     });
@@ -152,22 +147,12 @@ export class ProfessorsPage {
 
   protected openCreate(): void {
     this.editingProfessor.set(null);
-    this.form = this.emptyForm();
     this.errorMessage.set('');
     this.editorOpen.set(true);
   }
 
   protected openEdit(professor: Professor): void {
     this.editingProfessor.set(professor);
-    this.form = {
-      firstName: professor.firstName,
-      lastName: professor.lastName,
-      email: professor.email,
-      phone: professor.phone,
-      classroom: professor.classroom,
-      subject: professor.subject,
-      status: professor.status,
-    };
     this.errorMessage.set('');
     this.editorOpen.set(true);
   }
@@ -176,8 +161,7 @@ export class ProfessorsPage {
     if (!this.saving()) this.editorOpen.set(false);
   }
 
-  protected saveProfessor(): void {
-    const payload: ProfessorPayload = { ...this.form };
+  protected saveProfessor(payload: ProfessorPayload): void {
     const currentProfessor = this.editingProfessor();
     this.saving.set(true);
     this.errorMessage.set('');
@@ -194,7 +178,7 @@ export class ProfessorsPage {
         let professorIndex = 0;
         this.professors.update((professors) => {
           const updated = currentProfessor
-            ? professors.map((item) => item.id === currentProfessor.id ? professor : item)
+            ? professors.map((item) => (item.id === currentProfessor.id ? professor : item))
             : [professor, ...professors];
           const sorted = updated.sort((first, second) =>
             this.fullName(first).localeCompare(this.fullName(second), 'pt-BR'),
@@ -221,7 +205,9 @@ export class ProfessorsPage {
     this.errorMessage.set('');
     this.professorApi.deleteProfessor(professor.id).subscribe({
       next: () => {
-        this.professors.update((professors) => professors.filter((item) => item.id !== professor.id));
+        this.professors.update((professors) =>
+          professors.filter((item) => item.id !== professor.id),
+        );
         this.goToPage(this.page());
         this.deleting.set(false);
         this.professorToDelete.set(null);
@@ -236,21 +222,5 @@ export class ProfessorsPage {
 
   protected fullName(professor: Professor): string {
     return `${professor.firstName} ${professor.lastName}`;
-  }
-
-  protected initials(professor: Professor): string {
-    return `${professor.firstName.charAt(0)}${professor.lastName.charAt(0)}`.toLocaleUpperCase('pt-BR');
-  }
-
-  private emptyForm(): ProfessorForm {
-    return {
-      firstName: '',
-      lastName: '',
-      email: '',
-      phone: '',
-      classroom: '',
-      subject: '',
-      status: 'Ativo',
-    };
   }
 }

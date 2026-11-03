@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import {
@@ -14,6 +14,7 @@ import {
 } from '@ng-icons/lucide';
 import { HlmAvatarImports } from '@spartan-ng/helm/avatar';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
+import { CoursesStore } from '../courses/courses-store';
 import { ProfessorApiService } from '../professors/professor-api.service';
 import { StudentApiService, type Student } from '../students/student-api.service';
 
@@ -58,9 +59,11 @@ interface RecentActivity {
 export class DashboardPage {
   private readonly studentApi = inject(StudentApiService);
   private readonly professorApi = inject(ProfessorApiService);
+  private readonly coursesStore = inject(CoursesStore);
 
   protected readonly studentCount = signal(0);
   protected readonly professorCount = signal(0);
+  protected readonly courseCount = computed(() => this.coursesStore.courses().length);
   protected readonly recentActivities = signal<RecentActivity[]>([]);
 
   protected readonly metrics = [
@@ -86,9 +89,9 @@ export class DashboardPage {
     },
     {
       key: 'courses',
-      label: 'Cursos ativos',
-      value: '18',
-      note: 'em andamento neste período',
+      label: 'Cursos cadastrados',
+      value: '',
+      note: 'na escola',
       icon: 'lucideBookOpen',
       iconClass: 'bg-amber-50 text-amber-800 dark:bg-amber-950 dark:text-amber-200',
       barClass: 'bg-amber-500',

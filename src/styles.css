@@ -91,3 +91,9 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer components {
+  .surface {
+    @apply border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-950;
+  }
+}

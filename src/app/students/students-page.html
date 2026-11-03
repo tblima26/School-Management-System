@@ -1,24 +1,17 @@
-<section class="mx-auto w-full max-w-[1440px] px-5 py-8 sm:px-8 lg:px-10">
+<section class="mx-auto w-full max-w-360 px-5 py-8 sm:px-8 lg:px-10">
   <div class="mb-8 flex flex-col justify-between gap-5 md:flex-row md:items-end">
-    <div>
-      <p class="mb-2 text-xs font-semibold tracking-[0.14em] text-cyan-800 uppercase dark:text-cyan-300">
-        Secretaria acadêmica
-      </p>
-      <h1 class="text-3xl font-semibold tracking-tight text-slate-950 dark:text-white">Alunos</h1>
-      <p class="mt-2 max-w-xl text-sm text-slate-600 dark:text-slate-400">
-        Consulte e mantenha os registros dos alunos em um só lugar.
-      </p>
-    </div>
+    <app-title-content
+      eyebrow="Secretaria acadêmica"
+      title="Alunos"
+      description="Consulte e mantenha os registros dos alunos em um só lugar."
+    />
     <button hlmBtn type="button" class="h-10 gap-2 rounded-md bg-cyan-800 text-white hover:bg-cyan-900" (click)="openCreate()">
       <ng-icon name="lucidePlus" class="size-4" />
       Novo aluno
     </button>
   </div>
 
-  <div class="mb-6 flex items-center gap-2 rounded-md border border-cyan-200 bg-cyan-50 px-4 py-3 text-xs text-cyan-950 dark:border-cyan-900 dark:bg-cyan-950/40 dark:text-cyan-100">
-    <span class="size-2 shrink-0 rounded-full bg-cyan-600"></span>
-    API de demonstração: as alterações aparecem na tela, mas não são persistidas após recarregar.
-  </div>
+  <app-data-notice message="API de demonstração: as alterações aparecem na tela, mas não são persistidas após recarregar." />
 
   @if (errorMessage() && !editorOpen() && !studentToDelete()) {
     <div role="alert" class="mb-5 flex flex-wrap items-center justify-between gap-3 rounded-md border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-800 dark:border-rose-900 dark:bg-rose-950/40 dark:text-rose-200">
@@ -31,51 +24,26 @@
   }
 
   <div class="mb-6 grid gap-px overflow-hidden rounded-lg border border-slate-200 bg-slate-200 sm:grid-cols-2 dark:border-slate-800 dark:bg-slate-800">
-    <div class="flex items-center gap-4 bg-white px-5 py-4 dark:bg-slate-950">
-      <span class="grid size-10 place-items-center rounded-md bg-cyan-50 text-cyan-800 dark:bg-cyan-950 dark:text-cyan-200">
+    <app-stat-card label="Alunos cadastrados" [value]="students().length">
+      <span stat-icon class="grid size-10 place-items-center rounded-md bg-cyan-50 text-cyan-800 dark:bg-cyan-950 dark:text-cyan-200">
         <ng-icon name="lucideUsers" class="size-5" />
       </span>
-      <div>
-        <p class="text-xs text-slate-500 dark:text-slate-400">Alunos cadastrados</p>
-        <p class="mt-0.5 text-xl font-semibold text-slate-950 dark:text-white">{{ students().length }}</p>
-      </div>
-    </div>
-    <div class="flex items-center gap-4 bg-white px-5 py-4 dark:bg-slate-950">
-      <span class="size-2.5 rounded-full bg-emerald-500"></span>
-      <div>
-        <p class="text-xs text-slate-500 dark:text-slate-400">Matrículas ativas</p>
-        <p class="mt-0.5 text-xl font-semibold text-slate-950 dark:text-white">{{ activeCount() }}</p>
-      </div>
-    </div>
+    </app-stat-card>
+    <app-stat-card label="Matrículas ativas" [value]="activeCount()">
+      <span stat-icon class="size-2.5 rounded-full bg-emerald-500"></span>
+    </app-stat-card>
   </div>
 
-  <div class="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center">
-    <div class="relative min-w-0 flex-1">
-      <ng-icon name="lucideSearch" class="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
-      <input
-        hlmInput
-        type="search"
-        placeholder="Buscar por nome, e-mail ou instituição"
-        aria-label="Buscar alunos"
-        class="h-10 w-full pl-9"
-        [ngModel]="searchTerm()"
-        (ngModelChange)="setSearchTerm($event)"
-      />
-    </div>
-    <label class="sr-only" for="status-filter">Filtrar por situação</label>
-    <select
-      id="status-filter"
-      class="h-10 min-w-40 rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none focus:border-cyan-700 focus:ring-2 focus:ring-cyan-700/20 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200"
-      [ngModel]="statusFilter()"
-      (ngModelChange)="setStatusFilter($event)"
-    >
-      <option value="Todos">Todas as situações</option>
-      <option value="Ativo">Ativos</option>
-      <option value="Inativo">Inativos</option>
-    </select>
-  </div>
+  <app-entity-filters
+    entity="alunos"
+    searchPlaceholder="Buscar por nome, e-mail ou instituição"
+    [searchTerm]="searchTerm()"
+    [statusFilter]="statusFilter()"
+    (searchTermChange)="setSearchTerm($event)"
+    (statusFilterChange)="setStatusFilter($event)"
+  />
 
-  <div class="overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-950">
+  <div class="surface overflow-hidden rounded-lg">
     <div class="hidden grid-cols-[minmax(220px,1.3fr)_minmax(200px,1fr)_minmax(160px,1fr)_90px_110px_88px] items-center gap-4 border-b border-slate-200 bg-slate-50 px-5 py-3 text-[11px] font-semibold tracking-wide text-slate-500 uppercase dark:border-slate-800 dark:bg-slate-900 dark:text-slate-400 md:grid">
       <span>Aluno</span><span>Contato</span><span>Instituição</span><span>Idade</span><span>Situação</span><span class="text-right">Ações</span>
     </div>
@@ -83,40 +51,16 @@
     @if (loading()) {
       <div class="space-y-3 p-5" aria-label="Carregando alunos">
         @for (row of [1, 2, 3, 4]; track row) {
-          <div class="h-[62px] animate-pulse rounded-md bg-slate-100 dark:bg-slate-900"></div>
+          <div class="h-15.5 animate-pulse rounded-md bg-slate-100 dark:bg-slate-900"></div>
         }
       </div>
     } @else if (filteredStudents().length) {
       @for (student of paginatedStudents(); track student.id) {
-        <article class="grid gap-3 border-b border-slate-100 px-4 py-4 last:border-b-0 sm:px-5 md:grid-cols-[minmax(220px,1.3fr)_minmax(200px,1fr)_minmax(160px,1fr)_90px_110px_88px] md:items-center md:gap-4 dark:border-slate-900">
-          <div class="flex min-w-0 items-center gap-3">
-            <span class="grid size-10 shrink-0 place-items-center rounded-full bg-cyan-100 text-xs font-semibold text-cyan-900 dark:bg-cyan-950 dark:text-cyan-200">{{ initials(student) }}</span>
-            <div class="min-w-0">
-              <p class="truncate text-sm font-medium text-slate-900 dark:text-slate-100">{{ fullName(student) }}</p>
-              <p class="mt-0.5 text-xs text-slate-500 md:hidden">{{ student.age }} anos</p>
-            </div>
-          </div>
-          <div class="min-w-0 space-y-1 text-xs text-slate-600 dark:text-slate-400">
-            <p class="flex min-w-0 items-center gap-2"><ng-icon name="lucideMail" class="size-3.5 shrink-0" /><span class="truncate">{{ student.email }}</span></p>
-            <p class="flex items-center gap-2"><ng-icon name="lucidePhone" class="size-3.5 shrink-0" /><span>{{ student.phone || 'Sem telefone' }}</span></p>
-          </div>
-          <p class="flex items-center gap-2 text-xs text-slate-700 dark:text-slate-300"><ng-icon name="lucideBuilding2" class="size-3.5 shrink-0 text-slate-400" /><span class="truncate">{{ student.university || 'Não informada' }}</span></p>
-          <p class="hidden text-sm text-slate-600 md:block dark:text-slate-400">{{ student.age }} anos</p>
-          <p>
-            <span class="inline-flex items-center gap-1.5 text-xs font-medium" [class.text-emerald-700]="student.status === 'Ativo'" [class.text-slate-500]="student.status === 'Inativo'" [class.dark:text-emerald-300]="student.status === 'Ativo'" [class.dark:text-slate-400]="student.status === 'Inativo'">
-              <span class="size-1.5 rounded-full" [class.bg-emerald-500]="student.status === 'Ativo'" [class.bg-slate-400]="student.status === 'Inativo'"></span>
-              {{ student.status }}
-            </span>
-          </p>
-          <div class="flex justify-end gap-1 border-t border-slate-100 pt-2 md:border-0 md:pt-0 dark:border-slate-900">
-            <button hlmBtn variant="ghost" type="button" class="size-8 rounded-md p-0 text-slate-600 hover:text-cyan-800" [attr.aria-label]="'Editar ' + fullName(student)" (click)="openEdit(student)">
-              <ng-icon name="lucidePencil" class="size-4" />
-            </button>
-            <button hlmBtn variant="ghost" type="button" class="size-8 rounded-md p-0 text-slate-600 hover:bg-rose-50 hover:text-rose-700 dark:hover:bg-rose-950" [attr.aria-label]="'Excluir ' + fullName(student)" (click)="studentToDelete.set(student)">
-              <ng-icon name="lucideTrash2" class="size-4" />
-            </button>
-          </div>
-        </article>
+        <app-student-row
+          [student]="student"
+          (edit)="openEdit(student)"
+          (delete)="studentToDelete.set($event)"
+        />
       }
     } @else {
       <div class="px-5 py-16 text-center">
@@ -173,87 +117,20 @@
 </section>
 
 @if (editorOpen()) {
-  <div class="fixed inset-0 z-50 grid place-items-center overflow-y-auto bg-slate-950/50 p-4" (click)="closeEditor()">
-    <section
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="student-dialog-title"
-      class="my-auto w-full max-w-xl rounded-lg border border-slate-200 bg-white shadow-2xl dark:border-slate-700 dark:bg-slate-950"
-      (click)="$event.stopPropagation()"
-    >
-      <div class="flex items-start justify-between border-b border-slate-200 px-6 py-5 dark:border-slate-800">
-        <div>
-          <h2 id="student-dialog-title" class="text-lg font-semibold text-slate-950 dark:text-white">
-            {{ editingStudent() ? 'Editar aluno' : 'Novo aluno' }}
-          </h2>
-          <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">Preencha os dados do cadastro.</p>
-        </div>
-        <button hlmBtn variant="ghost" type="button" class="size-8 rounded-md p-0" aria-label="Fechar formulário" (click)="closeEditor()">
-          <ng-icon name="lucideX" class="size-4" />
-        </button>
-      </div>
-
-      <form #studentEditor="ngForm" (ngSubmit)="saveStudent()">
-        <div class="grid gap-4 px-6 py-5 sm:grid-cols-2">
-          <label class="grid gap-1.5 text-xs font-medium text-slate-700 dark:text-slate-300">
-            Nome
-            <input hlmInput name="firstName" [(ngModel)]="form.firstName" required maxlength="60" class="h-10" />
-          </label>
-          <label class="grid gap-1.5 text-xs font-medium text-slate-700 dark:text-slate-300">
-            Sobrenome
-            <input hlmInput name="lastName" [(ngModel)]="form.lastName" required maxlength="80" class="h-10" />
-          </label>
-          <label class="grid gap-1.5 text-xs font-medium text-slate-700 dark:text-slate-300 sm:col-span-2">
-            E-mail
-            <input hlmInput type="email" name="email" [(ngModel)]="form.email" required email class="h-10" />
-          </label>
-          <label class="grid gap-1.5 text-xs font-medium text-slate-700 dark:text-slate-300">
-            Telefone
-            <input hlmInput type="tel" name="phone" [(ngModel)]="form.phone" required class="h-10" />
-          </label>
-          <label class="grid gap-1.5 text-xs font-medium text-slate-700 dark:text-slate-300">
-            Idade
-            <input hlmInput type="number" name="age" [(ngModel)]="form.age" required min="1" max="120" class="h-10" />
-          </label>
-          <label class="grid gap-1.5 text-xs font-medium text-slate-700 dark:text-slate-300 sm:col-span-2">
-            Instituição
-            <input hlmInput name="university" [(ngModel)]="form.university" required maxlength="120" class="h-10" />
-          </label>
-          <label class="grid gap-1.5 text-xs font-medium text-slate-700 dark:text-slate-300">
-            Situação da matrícula
-            <select name="status" [(ngModel)]="form.status" class="h-10 rounded-md border border-slate-200 bg-white px-3 text-sm font-normal outline-none focus:border-cyan-700 focus:ring-2 focus:ring-cyan-700/20 dark:border-slate-700 dark:bg-slate-950">
-              <option value="Ativo">Ativo</option>
-              <option value="Inativo">Inativo</option>
-            </select>
-          </label>
-        </div>
-
-        @if (errorMessage()) {
-          <p role="alert" class="mx-6 mb-4 text-xs text-rose-700 dark:text-rose-300">{{ errorMessage() }}</p>
-        }
-
-        <div class="flex justify-end gap-2 border-t border-slate-200 px-6 py-4 dark:border-slate-800">
-          <button hlmBtn variant="outline" type="button" class="h-9 rounded-md" (click)="closeEditor()">Cancelar</button>
-          <button hlmBtn type="submit" class="h-9 min-w-28 rounded-md bg-cyan-800 text-white hover:bg-cyan-900" [disabled]="studentEditor.invalid || saving()">
-            {{ saving() ? 'Salvando...' : editingStudent() ? 'Salvar alterações' : 'Cadastrar aluno' }}
-          </button>
-        </div>
-      </form>
-    </section>
-  </div>
+  <app-student-editor
+    [student]="editingStudent()"
+    [saving]="saving()"
+    [errorMessage]="errorMessage()"
+    (closed)="closeEditor()"
+    (saved)="saveStudent($event)"
+  />
 }
 
 @if (studentToDelete(); as student) {
-  <div class="fixed inset-0 z-[60] grid place-items-center bg-slate-950/50 p-4" (click)="studentToDelete.set(null)">
-    <section role="alertdialog" aria-modal="true" aria-labelledby="delete-dialog-title" class="w-full max-w-md rounded-lg border border-slate-200 bg-white p-6 shadow-2xl dark:border-slate-700 dark:bg-slate-950" (click)="$event.stopPropagation()">
-      <h2 id="delete-dialog-title" class="text-lg font-semibold text-slate-950 dark:text-white">Excluir aluno?</h2>
-      <p class="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-400">O cadastro de <strong class="font-medium text-slate-900 dark:text-slate-100">{{ fullName(student) }}</strong> será removido desta tela.</p>
-      <div class="mt-6 flex justify-end gap-2">
-        <button hlmBtn variant="outline" type="button" class="h-9 rounded-md" [disabled]="deleting()" (click)="studentToDelete.set(null)">Cancelar</button>
-        <button hlmBtn type="button" class="h-9 rounded-md bg-rose-700 text-white hover:bg-rose-800" [disabled]="deleting()" (click)="confirmDelete()">
-          {{ deleting() ? 'Excluindo...' : 'Excluir aluno' }}
-        </button>
-      </div>
-    </section>
-  </div>
+  <app-student-delete-confirmation
+    [student]="student"
+    [deleting]="deleting()"
+    (canceled)="studentToDelete.set(null)"
+    (confirmed)="confirmDelete()"
+  />
 }

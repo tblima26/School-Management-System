@@ -1,0 +1,35 @@
+<div class="fixed inset-0 z-50 grid place-items-center overflow-y-auto bg-slate-950/50 p-4" (click)="closed.emit()">
+  <section role="dialog" aria-modal="true" aria-labelledby="course-dialog-title" class="surface my-auto w-full max-w-lg rounded-lg shadow-2xl dark:border-slate-700" (click)="$event.stopPropagation()">
+    <div class="flex items-start justify-between border-b border-slate-200 px-6 py-5 dark:border-slate-800">
+      <div>
+        <h2 id="course-dialog-title" class="text-lg font-semibold text-slate-950 dark:text-white">
+          {{ course ? 'Editar curso' : 'Novo curso' }}
+        </h2>
+        <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">Informe os dados básicos do curso.</p>
+      </div>
+      <button hlmBtn variant="ghost" type="button" class="size-8 rounded-md p-0" aria-label="Fechar formulário" (click)="closed.emit()">
+        <ng-icon name="lucideX" class="size-4" />
+      </button>
+    </div>
+
+    <form #courseEditor="ngForm" (ngSubmit)="submit()">
+      <div class="grid gap-4 px-6 py-5">
+        <label class="grid gap-1.5 text-xs font-medium text-slate-700 dark:text-slate-300">
+          Nome do curso
+          <input hlmInput name="name" [(ngModel)]="form.name" required maxlength="80" placeholder="Ex.: Ensino Fundamental" class="h-10" />
+        </label>
+        <label class="grid gap-1.5 text-xs font-medium text-slate-700 dark:text-slate-300">
+          Descrição <span class="font-normal text-slate-500">(opcional)</span>
+          <textarea name="description" [(ngModel)]="form.description" maxlength="240" rows="3" placeholder="Uma breve descrição do curso" class="surface w-full resize-y rounded-md px-3 py-2 text-sm font-normal text-slate-900 outline-none placeholder:text-slate-400 focus:border-cyan-700 focus:ring-2 focus:ring-cyan-700/20 dark:border-slate-700 dark:text-slate-100"></textarea>
+        </label>
+      </div>
+
+      <div class="flex justify-end gap-2 border-t border-slate-200 px-6 py-4 dark:border-slate-800">
+        <button hlmBtn variant="outline" type="button" class="h-9 rounded-md" (click)="closed.emit()">Cancelar</button>
+        <button hlmBtn type="submit" class="h-9 min-w-28 rounded-md bg-cyan-800 text-white hover:bg-cyan-900" [disabled]="courseEditor.invalid">
+          {{ course ? 'Salvar alterações' : 'Cadastrar curso' }}
+        </button>
+      </div>
+    </form>
+  </section>
+</div>

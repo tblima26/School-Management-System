@@ -1,0 +1,61 @@
+<section class="mx-auto w-full max-w-360 px-5 py-8 sm:px-8 lg:px-10">
+  <div class="mb-8 flex flex-col justify-between gap-5 md:flex-row md:items-end">
+    <app-title-content
+      eyebrow="Organização acadêmica"
+      title="Cursos"
+      description="Cadastre e mantenha os cursos oferecidos pela escola."
+    />
+    <button hlmBtn type="button" class="h-10 gap-2 rounded-md bg-cyan-800 text-white hover:bg-cyan-900" (click)="openCreate()">
+      <ng-icon name="lucidePlus" class="size-4" />
+      Novo curso
+    </button>
+  </div>
+
+  <app-data-notice message="Dados locais deste navegador: alterações ficam salvas aqui e não são enviadas a uma API." />
+
+  <div class="mb-6 grid gap-px overflow-hidden rounded-lg border border-slate-200 bg-slate-200 sm:grid-cols-2 dark:border-slate-800 dark:bg-slate-800">
+    <app-stat-card label="Cursos cadastrados" [value]="courses().length">
+      <span stat-icon class="grid size-10 place-items-center rounded-md bg-cyan-50 text-cyan-800 dark:bg-cyan-950 dark:text-cyan-200">
+        <ng-icon name="lucideBookOpen" class="size-5" />
+      </span>
+    </app-stat-card>
+    <app-stat-card label="Professores ativos" [value]="activeProfessorCount()">
+      <span stat-icon class="grid size-10 place-items-center rounded-md bg-emerald-50 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-200">
+        <ng-icon name="lucideUsers" class="size-5" />
+      </span>
+    </app-stat-card>
+  </div>
+
+  <div class="surface overflow-hidden rounded-lg">
+    @if (courses().length) {
+      @for (course of courses(); track course.id) {
+        <app-course-row
+          [course]="course"
+          (edit)="openEdit(course)"
+          (delete)="courseToDelete.set($event)"
+        />
+      }
+    } @else {
+      <div class="px-5 py-16 text-center">
+        <p class="text-sm font-medium text-slate-800 dark:text-slate-200">Nenhum curso cadastrado</p>
+        <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">Adicione um curso para começar.</p>
+      </div>
+    }
+  </div>
+</section>
+
+@if (editorOpen()) {
+  <app-course-editor
+    [course]="editingCourse()"
+    (closed)="closeEditor()"
+    (saved)="saveCourse($event)"
+  />
+}
+
+@if (courseToDelete(); as course) {
+  <app-course-delete-confirmation
+    [course]="course"
+    (canceled)="courseToDelete.set(null)"
+    (confirmed)="confirmDelete()"
+  />
+}
