@@ -18,7 +18,7 @@
           <ul hlmSidebarMenu>
             @for (item of _mainItems; track item.title) {
               <li hlmSidebarMenuItem>
-                @if (item.url === '/' || item.url === '/alunos' || item.url === '/professores' || item.url === '/cursos' || item.url === '/notas') {
+                @if (item.url === '/' || item.url === '/alunos' || item.url === '/professores' || item.url === '/cursos' || item.url === '/notas' || item.url === '/configuracoes') {
                   <a
                     hlmSidebarMenuButton
                     [routerLink]="item.url"
@@ -49,10 +49,23 @@
           <ul hlmSidebarMenu>
             @for (item of _systemItems; track item.title) {
               <li hlmSidebarMenuItem>
-                <button hlmSidebarMenuButton type="button" class="w-full">
-                  <ng-icon [name]="item.icon" />
-                  <span>{{ item.title }}</span>
-                </button>
+                @if (item.url === '/configuracoes') {
+                  <a
+                    hlmSidebarMenuButton
+                    [routerLink]="item.url"
+                    routerLinkActive="bg-cyan-50 text-cyan-800 dark:bg-cyan-950 dark:text-cyan-200"
+                    [routerLinkActiveOptions]="{ exact: true }"
+                    class="w-full"
+                  >
+                    <ng-icon [name]="item.icon" />
+                    <span>{{ item.title }}</span>
+                  </a>
+                } @else {
+                  <button hlmSidebarMenuButton type="button" class="w-full">
+                    <ng-icon [name]="item.icon" />
+                    <span>{{ item.title }}</span>
+                  </button>
+                }
               </li>
             }
           </ul>

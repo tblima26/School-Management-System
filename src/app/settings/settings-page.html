@@ -1,0 +1,145 @@
+<main class="mx-auto w-full max-w-360 px-5 py-8 sm:px-8 lg:px-10">
+  <header class="mb-8 flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
+    <app-title-content
+      eyebrow="Conta e preferências"
+      title="Configurações"
+      description="Gerencie as informações do perfil e as preferências da sua conta."
+    />
+    <span class="inline-flex w-fit items-center gap-2 rounded-full border border-amber-200 bg-amber-50 px-3 py-1.5 text-xs font-medium text-amber-900 dark:border-amber-900 dark:bg-amber-950/40 dark:text-amber-200">
+      <span class="size-1.5 rounded-full bg-amber-500"></span>
+      Modo demonstrativo
+    </span>
+  </header>
+
+  <section class="surface rounded-lg px-4 sm:px-6">
+    <hlm-accordion type="single">
+      <hlm-accordion-item [isOpened]="true">
+        <hlm-accordion-trigger>
+          <span class="flex items-center gap-3">
+            <span class="grid size-9 place-items-center rounded-md bg-cyan-50 text-cyan-800 dark:bg-cyan-950 dark:text-cyan-200">
+              <ng-icon name="lucideUserRound" class="size-4" />
+            </span>
+            <span>
+              <span class="block">Meu perfil</span>
+              <span class="mt-0.5 block text-xs font-normal text-slate-500 dark:text-slate-400">Informações da conta</span>
+            </span>
+          </span>
+        </hlm-accordion-trigger>
+        <hlm-accordion-content>
+          <div class="grid gap-4 pb-4 sm:grid-cols-2">
+            <div class="flex items-center gap-3 border-b border-slate-100 pb-4 sm:col-span-2 dark:border-slate-800">
+              <span class="grid size-12 place-items-center rounded-full bg-cyan-800 text-sm font-semibold text-white">JS</span>
+              <div>
+                <p class="text-sm font-semibold text-slate-900 dark:text-slate-100">João da Silva</p>
+                <p class="mt-0.5 text-xs text-slate-500 dark:text-slate-400">Administrador escolar</p>
+              </div>
+            </div>
+            <div>
+              <p class="text-xs text-slate-500 dark:text-slate-400">E-mail</p>
+              <p class="mt-1 text-sm font-medium text-slate-800 dark:text-slate-200">joao.silva@escola.edu.br</p>
+            </div>
+            <div>
+              <p class="text-xs text-slate-500 dark:text-slate-400">Telefone</p>
+              <p class="mt-1 text-sm font-medium text-slate-800 dark:text-slate-200">+55 11 98765-4321</p>
+            </div>
+            <div>
+              <p class="text-xs text-slate-500 dark:text-slate-400">Unidade</p>
+              <p class="mt-1 text-sm font-medium text-slate-800 dark:text-slate-200">Escola Modelo</p>
+            </div>
+            <div>
+              <p class="text-xs text-slate-500 dark:text-slate-400">Acesso</p>
+              <p class="mt-1 text-sm font-medium text-slate-800 dark:text-slate-200">Perfil de demonstração</p>
+            </div>
+          </div>
+        </hlm-accordion-content>
+      </hlm-accordion-item>
+
+      <hlm-accordion-item>
+        <hlm-accordion-trigger>
+          <span class="flex items-center gap-3">
+            <span class="grid size-9 place-items-center rounded-md bg-emerald-50 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-200">
+              <ng-icon name="lucideBell" class="size-4" />
+            </span>
+            <span>
+              <span class="block">Notificações</span>
+              <span class="mt-0.5 block text-xs font-normal text-slate-500 dark:text-slate-400">Preferências desta sessão</span>
+            </span>
+          </span>
+        </hlm-accordion-trigger>
+        <hlm-accordion-content>
+          <div class="divide-y divide-slate-100 dark:divide-slate-800">
+            <div class="flex items-center justify-between gap-5 py-4">
+              <div>
+                <label for="grade-deadline-notifications" class="text-sm font-medium text-slate-800 dark:text-slate-200">Prazos de lançamento</label>
+                <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">Avisos sobre datas de lançamento de notas.</p>
+              </div>
+              <hlm-switch
+                inputId="grade-deadline-notifications"
+                aria-label="Ativar avisos de prazos de lançamento"
+                [ngModel]="gradeDeadlineNotifications()"
+                (ngModelChange)="gradeDeadlineNotifications.set($event)"
+              />
+            </div>
+            <div class="flex items-center justify-between gap-5 py-4">
+              <div>
+                <label for="academic-update-notifications" class="text-sm font-medium text-slate-800 dark:text-slate-200">Atualizações acadêmicas</label>
+                <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">Avisos sobre alterações em alunos, professores e cursos.</p>
+              </div>
+              <hlm-switch
+                inputId="academic-update-notifications"
+                aria-label="Ativar avisos de atualizações acadêmicas"
+                [ngModel]="academicUpdateNotifications()"
+                (ngModelChange)="academicUpdateNotifications.set($event)"
+              />
+            </div>
+            <div class="flex items-center justify-between gap-5 py-4">
+              <div>
+                <label for="weekly-summary-notifications" class="text-sm font-medium text-slate-800 dark:text-slate-200">Resumo semanal</label>
+                <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">Resumo demonstrativo das atividades da escola.</p>
+              </div>
+              <hlm-switch
+                inputId="weekly-summary-notifications"
+                aria-label="Ativar resumo semanal"
+                [ngModel]="weeklySummaryNotifications()"
+                (ngModelChange)="weeklySummaryNotifications.set($event)"
+              />
+            </div>
+          </div>
+        </hlm-accordion-content>
+      </hlm-accordion-item>
+
+      <hlm-accordion-item>
+        <hlm-accordion-trigger>
+          <span class="flex items-center gap-3">
+            <span class="grid size-9 place-items-center rounded-md bg-amber-50 text-amber-800 dark:bg-amber-950 dark:text-amber-200">
+              <ng-icon name="lucideShieldCheck" class="size-4" />
+            </span>
+            <span>
+              <span class="block">Sessão e acesso</span>
+              <span class="mt-0.5 block text-xs font-normal text-slate-500 dark:text-slate-400">Informações de demonstração</span>
+            </span>
+          </span>
+        </hlm-accordion-trigger>
+        <hlm-accordion-content>
+          <div class="grid gap-4 pb-4 sm:grid-cols-2">
+            <div>
+              <p class="text-xs text-slate-500 dark:text-slate-400">Tipo de conta</p>
+              <p class="mt-1 text-sm font-medium text-slate-800 dark:text-slate-200">Administrador</p>
+            </div>
+            <div>
+              <p class="text-xs text-slate-500 dark:text-slate-400">Autenticação</p>
+              <p class="mt-1 text-sm font-medium text-slate-800 dark:text-slate-200">Não configurada</p>
+            </div>
+            <p class="text-xs leading-5 text-slate-500 sm:col-span-2 dark:text-slate-400">
+              Esta versão não possui login ou gerenciamento de sessão. Os dados exibidos são apenas ilustrativos.
+            </p>
+          </div>
+        </hlm-accordion-content>
+      </hlm-accordion-item>
+    </hlm-accordion>
+  </section>
+
+  <p class="mt-4 text-xs text-slate-500 dark:text-slate-400">
+    Os switches alteram apenas a visualização durante esta sessão. As preferências não são salvas nem enviam notificações.
+  </p>
+</main>

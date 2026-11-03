@@ -4,6 +4,7 @@ import { CoursesPage } from './courses/courses-page';
 import { ProfessorsPage } from './professors/professors-page';
 import { StudentsPage } from './students/students-page';
 import { GradesPage } from './grades/grades-page';
+import { SettingsPage } from './settings/settings-page';
 
 export const routes: Routes = [
 	{ path: '', component: DashboardPage },
@@ -12,5 +13,6 @@ export const routes: Routes = [
 	{ path: 'professores', component: ProfessorsPage },
 	{ path: 'cursos', component: CoursesPage },
 	{ path: 'notas', component: GradesPage },
+	{ path: 'configuracoes', component: SettingsPage },
 	{ path: '**', redirectTo: '' },
 ];
