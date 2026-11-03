@@ -83,29 +83,6 @@ A aplicação será iniciada em modo de desenvolvimento e normalmente estará di
 http://localhost:5000
 ```
 
-### Build de produção
-
-```bash
-npm run build
-```
-
-### Testes
-
-```bash
-npm test
-```
-
-## 🧩 Scripts disponíveis
-
-```json
-{
-  "start": "ng serve",
-  "build": "ng build",
-  "watch": "ng build --watch --configuration development",
-  "test": "ng test"
-}
-```
-
 ## 🗺️ Roadmap
 
 - 🔍 Melhorias na experiência do usuário
