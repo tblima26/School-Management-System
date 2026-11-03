@@ -74,7 +74,7 @@ npm install
 ### Ambiente de desenvolvimento
 
 ```bash
-npm start
+ng serve
 ```
 
 A aplicação será iniciada em modo de desenvolvimento e normalmente estará disponível em:
